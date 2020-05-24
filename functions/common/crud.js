@@ -12,7 +12,7 @@ module.exports = (entity, schema) => (event, context) => {
   });
   const id = getId(path);
   let data;
-  if (typeof body !== 'undefined' && body !== '') {
+  if (typeof body !== 'undefined' && body !== '' && body !== '[object Object]') {
     data = JSON.parse(body);
 
     try {

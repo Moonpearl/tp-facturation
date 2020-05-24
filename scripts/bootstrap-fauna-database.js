@@ -46,7 +46,7 @@ const createFaunaDB = new Promise( async (resolve, reject) => {
   ;
 
   console.log('Creating the Fauna database schema...')
-  const classNames = ['todos'];
+  const classNames = ['invoices', 'companies'];
 
   try {
     for (const className of classNames) {
@@ -55,14 +55,57 @@ const createFaunaDB = new Promise( async (resolve, reject) => {
 
     await client.query(
       q.CreateIndex({
-        name: 'completed_todos',
-        source: q.Collection('todos'),
+        name: 'companies_by_isClient',
+        source: q.Collection('companies'),
         terms: [
-          { field: ['data', 'completed'] },
+          { field: ['data', 'isClient'] },
         ],
       })
     )
-    .then(() => console.log(`Created selection index for class 'todos'`))
+    .then(() => console.log(`Created selection index for class 'companies' by isClient`))
+    .catch(e => {
+      if (e.requestResult.statusCode === 400 && e.message === 'instance already exists') {
+        console.log(`Fauna index 'companies_by_isClient' already exists`)
+      } else {
+        throw e
+      }
+    });
+
+    await client.query(
+      q.CreateIndex({
+        name: 'invoices_by_accountant',
+        source: q.Collection('invoices'),
+        terms: [
+          { field: ['data', 'accountant'] },
+        ],
+      })
+    )
+    .then(() => console.log(`Created selection index for class 'invoices' by consultant`))
+    .catch(e => {
+      if (e.requestResult.statusCode === 400 && e.message === 'instance already exists') {
+        console.log(`Fauna index 'invoices_by_accountant' already exists`)
+      } else {
+        throw e
+      }
+    });
+
+    await client.query(
+      q.CreateIndex({
+        name: 'invoices_by_client',
+        source: q.Collection('invoices'),
+        terms: [
+          { field: ['data', 'client'] },
+        ],
+      })
+    )
+    .then(() => console.log(`Created selection index for class 'invoices' by client`))
+    .catch(e => {
+      if (e.requestResult.statusCode === 400 && e.message === 'instance already exists') {
+        console.log(`Fauna index 'invoices_by_client' already exists`)
+      } else {
+        throw e
+      }
+    });
 
     resolve();
   }
