@@ -12,7 +12,6 @@ module.exports = (entity, schema) => (event, context) => {
   });
   const id = getId(path);
   let data;
-  console.log('Body =', body);
   if (typeof body !== 'undefined' && body !== '' && body !== '[object Object]') {
     data = JSON.parse(body);
 
