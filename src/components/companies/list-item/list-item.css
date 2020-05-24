@@ -1,0 +1,11 @@
+.CompaniesListItem {
+    display: grid !important;
+    grid-template-columns: 4fr 2fr 4fr 1fr;
+}
+
+.CompaniesListItem-label {
+    font-size: .75rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-right: .5rem;
+}
